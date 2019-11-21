@@ -1204,24 +1204,24 @@ moveplace(const Arg *arg)
 		 return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 		togglefloating(NULL);
-	nh = (selmon->wh / 3) - (c->bw * 2);
-	nw = (selmon->ww / 3) - (c->bw * 2);
+	nh = c->h;
+	nw = c->w;
 	nx = (arg->ui % 3) -1;
 	ny = (arg->ui / 3) -1;
 	if (nx < 0)
 		nx = selmon->wx;
 	else if(nx > 0)
-		nx = selmon->wx + selmon->ww - nw - c->bw*2;
+		nx = selmon->wx + selmon->ww - nw;
 	else
-		nx = selmon->wx + selmon->ww/2 - nw/2 - c->bw;
+	        nx = (selmon->ww - nw) / 2;
 	if (ny <0)
 		ny = selmon->wy;
 	else if(ny > 0)
-		ny = selmon->wy + selmon->wh - nh - c->bw*2;
+		ny = selmon->wy + selmon->wh - nh;
 	else
-		ny = selmon->wy + selmon->wh/2 - nh/2 - c->bw;
+	        ny = (selmon->wh - nh) / 2;
 	resize(c, nx, ny, nw, nh, True);
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2);
+	/* XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2); */
 }
 
 Client *
