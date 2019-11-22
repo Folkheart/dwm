@@ -1210,16 +1210,16 @@ moveplace(const Arg *arg)
 	ny = (arg->ui / 3) -1;
 	if (nx < 0)
 		nx = selmon->wx;
-	else if(nx > 0)
-		nx = selmon->ww - nw - c->bw*2;
+	else if (nx > 0)
+	        nx = (selmon->wx + selmon->ww) - WIDTH(c);
 	else
-	        nx = (selmon->ww - nw) / 2;
+	        nx = ((selmon->wx + selmon->ww) - WIDTH(c)) / 2;
 	if (ny <0)
 		ny = selmon->wy;
-	else if(ny > 0)
-		ny = selmon->wy + selmon->wh - nh - c->bw*2;
+	else if (ny > 0)
+	        ny = (selmon->wy + selmon->wh) - HEIGHT(c);
 	else
-	        ny = (selmon->wh - nh) / 2;
+	        ny = ((selmon->wy + selmon->wh) - HEIGHT(c)) / 2;
 	resize(c, nx, ny, nw, nh, True);
 	/* XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2); */
 }
