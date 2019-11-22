@@ -1240,8 +1240,8 @@ resizefwidth(const Arg *arg)
 	ny = c->y;
         nw = c->w + arg->ui;
 	nh = c->h;
-        if (nw > selmon->ww)
-                nw = selmon->ww;
+        if (nw > (selmon->ww - c->bw*2))
+                nw = selmon->ww - c->bw*2;
         else if (nw < selmon->ww * 0.1)
 	        nw = selmon->ww * 0.1;
 	resize(c, nx, ny, nw, nh, True);
@@ -1253,8 +1253,7 @@ resizefheight(const Arg *arg)
 {
 	Client *c;
 	int nh, nw, nx, ny;
-	c = selmon->sel;
-	if (!c || c->isfullscreen)
+	if (!(c = selmon->sel) || c->isfullscreen)
 		return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
@@ -1263,8 +1262,8 @@ resizefheight(const Arg *arg)
 	ny = c->y;
         nw = c->w;
 	nh = c->h + arg->ui;
-        if (nh > selmon->wh)
-                nh = selmon->wh;
+        if (nh > (selmon->wh - c->bw*2))
+                nh = selmon->wh - c->bw*2;
         else if (nh < selmon->wh * 0.1)
 	        nh = selmon->wh * 0.1;
 	resize(c, nx, ny, nw, nh, True);
