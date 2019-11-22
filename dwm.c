@@ -185,8 +185,8 @@ static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static void moveplace(const Arg *arg);
-static void rezisefwidth(const Arg *arg);
-static void rezisefheight(const Arg *arg);
+static void resizefwidth(const Arg *arg);
+static void resizefheight(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -1227,7 +1227,7 @@ moveplace(const Arg *arg)
 }
 
 void
-rezisefwidth(const Arg *arg)
+resizefwidth(const Arg *arg)
 {
 	Client *c;
 	int nh, nw, nx, ny;
@@ -1249,7 +1249,7 @@ rezisefwidth(const Arg *arg)
 }
 
 void
-rezisefheight(const Arg *arg)
+resizefheight(const Arg *arg)
 {
 	Client *c;
 	int nh, nw, nx, ny;
