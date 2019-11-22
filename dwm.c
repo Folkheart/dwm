@@ -185,6 +185,8 @@ static void monocle(Monitor *m);
 static void motionnotify(XEvent *e);
 static void movemouse(const Arg *arg);
 static void moveplace(const Arg *arg);
+static void rezisefwidth(const Arg *arg);
+static void rezisefheight(const Arg *arg);
 static Client *nexttiled(Client *c);
 static void pop(Client *);
 static void propertynotify(XEvent *e);
@@ -1201,7 +1203,7 @@ moveplace(const Arg *arg)
 	int nh, nw, nx, ny;
 	c = selmon->sel;
 	if (!c || (arg->ui >= 9))
-		 return;
+		return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 		togglefloating(NULL);
 	nh = c->h;
@@ -1220,6 +1222,51 @@ moveplace(const Arg *arg)
 	        ny = selmon->wy + (selmon->wh - HEIGHT(c));
 	else
 	        ny = selmon->wy + (selmon->wh - HEIGHT(c)) / 2;
+	resize(c, nx, ny, nw, nh, True);
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2);
+}
+
+void
+rezisefwidth(const Arg *arg)
+{
+	Client *c;
+	int nh, nw, nx, ny;
+	if (!(c = selmon->sel) || c->isfullscreen)
+		return;
+	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
+	        return;
+
+        nx = c->x;
+	ny = c->y;
+        nw = c->w + arg->ui;
+	nh = c->h;
+        if (nw > selmon->ww)
+                nw = selmon->ww;
+        else if (nw < selmon->ww * 0.1)
+	        nw = selmon->ww * 0.1;
+	resize(c, nx, ny, nw, nh, True);
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2);
+}
+
+void
+rezisefheight(const Arg *arg)
+{
+	Client *c;
+	int nh, nw, nx, ny;
+	c = selmon->sel;
+	if (!c || c->isfullscreen)
+		return;
+	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
+	        return;
+
+        nx = c->x;
+	ny = c->y;
+        nw = c->w;
+	nh = c->h + arg->ui;
+        if (nh > selmon->wh)
+                nh = selmon->wh;
+        else if (nh < selmon->wh * 0.1)
+	        nh = selmon->wh * 0.1;
 	resize(c, nx, ny, nw, nh, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2);
 }
