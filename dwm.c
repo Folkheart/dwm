@@ -1211,13 +1211,13 @@ moveplace(const Arg *arg)
 	if (nx < 0)
 		nx = selmon->wx;
 	else if(nx > 0)
-		nx = selmon->wx + selmon->ww - nw;
+		nx = selmon->ww - nw - c->bw*2;
 	else
 	        nx = (selmon->ww - nw) / 2;
 	if (ny <0)
 		ny = selmon->wy;
 	else if(ny > 0)
-		ny = selmon->wy + selmon->wh - nh;
+		ny = selmon->wy + selmon->wh - nh - c->bw*2;
 	else
 	        ny = (selmon->wh - nh) / 2;
 	resize(c, nx, ny, nw, nh, True);
