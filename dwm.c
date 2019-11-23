@@ -1236,15 +1236,15 @@ resizefwidth(const Arg *arg)
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
 
-        nx = c->x;
-	ny = c->y;
         nw = c->w + arg->ui;
-	nh = c->h;
         if (nw > (selmon->ww - c->bw*2))
                 nw = selmon->ww - c->bw*2;
         else if (nw < selmon->ww * 0.1)
 	        nw = selmon->ww * 0.1;
-	resize(c, nx, ny, nw, nh, True);
+	if ((c->x + nw) > (selmon->ww - c->bw*2))
+	        nx = (selmon->ww - c->bw*2) - nw;
+
+	resize(c, nx, c->y, nw, c->h, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2);
 }
 
@@ -1258,15 +1258,15 @@ resizefheight(const Arg *arg)
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
 
-        nx = c->x;
-	ny = c->y;
-        nw = c->w;
 	nh = c->h + arg->ui;
         if (nh > (selmon->wh - c->bw*2))
                 nh = selmon->wh - c->bw*2;
         else if (nh < selmon->wh * 0.1)
 	        nh = selmon->wh * 0.1;
-	resize(c, nx, ny, nw, nh, True);
+	if ((c->y + nh) > (selmon->wh - c->bw*2))
+	        ny = (selmon->wh - c->bw*2) - nh;
+
+	resize(c, c->x, ny, c->w, nh, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, nh/2);
 }
 
