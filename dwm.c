@@ -1236,8 +1236,8 @@ resizefwidth(const Arg *arg)
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
 
-        nw = c->w + arg->ui*2;
-	nx = c->x - arg->ui;
+        nw = selmon->wx + c->w + arg->ui*2;
+	nx = selmon->wx + c->x - arg->ui;
 
 	if (selmon->ww > (nw + c->bw*2)) {
 	        if (nx > selmon->ww - (nw + c->bw*2))
