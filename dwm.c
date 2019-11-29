@@ -1251,7 +1251,7 @@ resizefwidth(const Arg *arg)
 	}
 
 	resize(c, nx, c->y, nw, c->h, True);
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, c->h/2);
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 }
 
 void
@@ -1279,7 +1279,7 @@ resizefheight(const Arg *arg)
 	}
 
 	resize(c, c->x, ny, c->w, nh, True);
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, c->h/2);
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 }
 
 Client *
