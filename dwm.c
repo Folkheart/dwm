@@ -1241,7 +1241,7 @@ resizefwidth(const Arg *arg)
 
 	if (selmon->ww > (nw + c->bw*2)) {
 	        if (c->x <= selmon->wx)
-	                nx == selmon->wx;
+	                nx = selmon->wx;
 	        else if (c->x >= selmon->wx + selmon->ww - WIDTH(c))
                         nx = selmon->wx + c->x - arg->ui*2;
 	        /* else if (nx > selmon->ww - (nw + c->bw*2)) */
