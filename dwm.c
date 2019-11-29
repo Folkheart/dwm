@@ -1237,14 +1237,14 @@ resizefwidth(const Arg *arg)
 	        return;
 
         nw = c->w + arg->ui*2;
-	nx = selmon->wx + c->x - arg->ui;
+	nx = c->x - arg->ui;
 
 	if (selmon->ww > (nw + c->bw*2)) {
-	        if (c->x < selmon->wx || nx < selmon->wx)
-	                nx = selmon->wx;
-	        else if (c->x > selmon->wx + selmon->ww - WIDTH(c)
-			 || nx > selmon->wx + selmon->ww - nw)
+	        if (c->x >= selmon->wx + selmon->ww - WIDTH(c)
+		        || nx >= selmon->wx + selmon->ww - nw)
                         nx = selmon->wx + selmon->ww - nw;
+	        else if (c->x <= selmon->wx || nx <= selmon->wx)
+	                nx = selmon->wx;
 	} else {
 	        nw = selmon->ww - c->bw*2;
 	        nx = selmon->wx;
@@ -1258,25 +1258,28 @@ void
 resizefheight(const Arg *arg)
 {
 	Client *c;
-	int nh, ny, wh;
+	int nh, ny;
 	if (!(c = selmon->sel) || c->isfullscreen)
 		return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
 
-	wh = selmon->wh - c->bw*2;
-	nh = c->h + arg->ui;
-        if (nh > wh)
-                nh = wh;
-        else if (nh < wh*0.1)
-	        nh = wh*0.1;
-	if ((c->y + nh) > wh)
-	        ny = selmon->wy + wh - nh;
-	else
-	        ny = c->y;
+        nh = c->h + arg->ui*2;
+	ny = c->y - arg->ui;
+
+	if (selmon->wh > (nh + c->bw*2)) {
+	        if (c->y >= selmon->wy + selmon->wh - HEIGHT(c)
+		        || ny >= selmon->wy + selmon->wh - nh)
+                        ny = selmon->wy + selmon->wh - nh;
+	        else if (c->y <= selmon->wy || ny <= selmon->wy)
+	                ny = selmon->wy;
+	} else {
+	        nh = selmon->wh - c->bw*2;
+	        ny = selmon->wy;
+	}
 
 	resize(c, c->x, ny, c->w, nh, True);
-	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, nh/2);
+	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, c->h/2);
 }
 
 Client *
