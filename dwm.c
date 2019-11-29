@@ -1252,7 +1252,7 @@ resizefwidth(const Arg *arg)
 	if (c->x == selmon->wx)
 	        nx = selmon->wx;
 	if (c->x == selmon->wx + selmon->ww - WIDTH(c))
-	        nx = selmon->wx + selmon->ww - WIDTH(c);
+	        nx = selmon->wx + c->x - arg->ui*2;
 
 	resize(c, nx, c->y, nw, c->h, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, c->h/2);
