@@ -1240,19 +1240,23 @@ resizefwidth(const Arg *arg)
 	nx = selmon->wx + c->x - arg->ui;
 
 	if (selmon->ww > (nw + c->bw*2)) {
-	        if (nx > selmon->ww - (nw + c->bw*2))
-	                nx = selmon->wx + selmon->ww - (nw + c->bw*2);
-	        else if (nx < selmon->wx)
-	                nx = selmon->wx;
+	        if (c->x <= selmon->wx)
+	                nx == selmon->wx;
+	        else if (c->x >= selmon->wx + selmon->ww - WIDTH(c))
+                        nx = selmon->wx + c->x - arg->ui*2;
+	        /* else if (nx > selmon->ww - (nw + c->bw*2)) */
+	        /*         nx = selmon->wx + selmon->ww - (nw + c->bw*2); */
+	        /* else if (nx < selmon->wx) */
+	        /*         nx = selmon->wx; */
 	} else {
 	        nw = selmon->ww - c->bw*2;
 	        nx = selmon->wx;
 	}
 
-	if (c->x == selmon->wx)
-	        nx = selmon->wx;
-	if (c->x == selmon->wx + selmon->ww - WIDTH(c))
-	        nx = selmon->wx + c->x - arg->ui*2;
+	/* if (c->x == selmon->wx) */
+	/*         nx = selmon->wx; */
+	/* if (c->x == selmon->wx + selmon->ww - WIDTH(c)) */
+	/*         nx = selmon->wx + c->x - arg->ui*2; */
 
 	resize(c, nx, c->y, nw, c->h, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, nw/2, c->h/2);
