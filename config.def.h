@@ -95,8 +95,8 @@ static Key keys[] = {
 	{ MODKEY|ControlMask,           XK_c,      moveplace,      {.ui = WIN_SE }},
 	{ MODKEY|ControlMask,           XK_j,      resizefheight,  {.ui = +20 }},
 	{ MODKEY|ControlMask,           XK_k,      resizefheight,  {.ui = -20 }},
-	{ MODKEY|ControlMask,           XK_l,      resizefwidth,   {.ui = +20 }},
-	{ MODKEY|ControlMask,           XK_h,      resizefwidth,   {.ui = -20 }},
+	{ MODKEY|ControlMask,           XK_l,      resizefwidth,   {.f = +0.05 }},
+	{ MODKEY|ControlMask,           XK_h,      resizefwidth,   {.f = -0.05 }},
 	TAGKEYS(                        XK_1,                      0)
 	TAGKEYS(                        XK_2,                      1)
 	TAGKEYS(                        XK_3,                      2)
