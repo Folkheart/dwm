@@ -1238,18 +1238,17 @@ resizefwidth(const Arg *arg)
 
         nw = c->w + arg->ui*2;
 	nx = c->x - arg->ui;
+	ww = selmon->ww - c->bw*2;
 
-	if (nw < selmon->ww - c->bw*2) {
-	        if (c->x + WIDTH(c) >= selmon->wx + selmon->ww 
-		        || nx + nw >= selmon->wx + selmon->ww - c->bw*2)
-		        nx = selmon->wx + selmon->ww - nw - c->bw*2; 
+	if (nw < ww) {
+	        if (c->x + c->w >= selmon->wx + ww || nx + nw >= selmon->wx + ww)
+		        nx = selmon->wx + ww - nw; 
 	        else if (c->x <= selmon->wx || nx <= selmon->wx)
 	                nx = selmon->wx;
 	} else {
-	        nw = selmon->ww - c->bw*2;
+	        nw = ww;
 	        nx = selmon->wx;
 	}
-
 	resize(c, nx, c->y, nw, c->h, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 }
