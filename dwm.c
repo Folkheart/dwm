@@ -1230,7 +1230,7 @@ void
 resizefwidth(const Arg *arg)
 {
 	Client *c;
-	int nw, nx;
+	int nw, nx, ww;
 	if (!(c = selmon->sel) || c->isfullscreen)
 		return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
