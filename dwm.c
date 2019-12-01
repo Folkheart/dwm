@@ -1236,7 +1236,7 @@ resizefwidth(const Arg *arg)
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
 
-	pxw = (int) (arg->f * semon->ww) / 2
+	pxw = (int) (arg->f * selmon->ww) / 2;
 	nx = c->x - pxw;
         nw = c->w + pxw*2;
 	ww = selmon->ww - c->bw*2;
