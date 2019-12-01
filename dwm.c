@@ -1258,26 +1258,26 @@ void
 resizefheight(const Arg *arg)
 {
 	Client *c;
-	int nh, ny;
+	int pxh, ny, nh, wh;
 	if (!(c = selmon->sel) || c->isfullscreen)
 		return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 	        return;
 
-        nh = c->h + arg->ui*2;
-	ny = c->y - arg->ui;
+	pxh = (int) (arg->f * selmon->wh) / 2;
+	ny = c->y - pxh;
+        nh = c->h + pxh*2;
+	wh = selmon->wh - c->bw*2;
 
-	if (selmon->wh > (nh + c->bw*2)) {
-	        if (c->y >= selmon->wy + selmon->wh - HEIGHT(c)
-		        || ny >= selmon->wy + selmon->wh - nh)
-                        ny = selmon->wy + selmon->wh - nh;
+	if (nh < wh) {
+	        if (c->y + c->h >= selmon->wy + wh || ny + nh >= selmon->wy + wh)
+		        ny = selmon->wy + wh - nh; 
 	        else if (c->y <= selmon->wy || ny <= selmon->wy)
 	                ny = selmon->wy;
 	} else {
-	        nh = selmon->wh - c->bw*2;
+	        nh = wh;
 	        ny = selmon->wy;
 	}
-
 	resize(c, c->x, ny, c->w, nh, True);
 	XWarpPointer(dpy, None, c->win, 0, 0, 0, 0, c->w/2, c->h/2);
 }
