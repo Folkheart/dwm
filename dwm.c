@@ -1201,8 +1201,7 @@ moveplace(const Arg *arg)
 {
 	Client *c;
 	int nh, nw, nx, ny;
-	c = selmon->sel;
-	if (!c || (arg->ui >= 9))
+	if (!(c = selmon->sel) || (arg->ui >= 9))
 		return;
 	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
 		togglefloating(NULL);
@@ -1231,11 +1230,8 @@ resizefwidth(const Arg *arg)
 {
 	Client *c;
 	int pxw, nx, nw, ww;
-	if (!(c = selmon->sel) || c->isfullscreen)
+	if (!(c = selmon->sel) || !c->isfloating)
 		return;
-	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
-	        return;
-
 	pxw = (int) (arg->f * selmon->ww) / 2;
 	nx = c->x - pxw;
         nw = c->w + pxw*2;
@@ -1259,11 +1255,8 @@ resizefheight(const Arg *arg)
 {
 	Client *c;
 	int pxh, ny, nh, wh;
-	if (!(c = selmon->sel) || c->isfullscreen)
+	if (!(c = selmon->sel) || !c->isfloating)
 		return;
-	if (selmon->lt[selmon->sellt]->arrange && !c->isfloating)
-	        return;
-
 	pxh = (int) (arg->f * selmon->wh) / 2;
 	ny = c->y - pxh;
         nh = c->h + pxh*2;
