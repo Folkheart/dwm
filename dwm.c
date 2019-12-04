@@ -147,6 +147,7 @@ static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interac
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
+static voie attachsup(const Arg *arg);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -411,6 +412,28 @@ attachstack(Client *c)
 {
 	c->snext = c->mon->stack;
 	c->mon->stack = c;
+}
+
+void
+attachsup(const Arg *arg)
+{
+        Client *c, *p, *beforep, *n;
+        if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c))
+              return;
+
+        /* find previous and before previous */
+        p = beforep = nexttiled(c->mon->clients);
+        for (; p && c != (n = nexttiled(p->next)); p = n)
+              beforep = p;
+        if (p == beforep) { /* c is the second */
+	      pop(c);
+	} else if (beforep != c) { /* c is not the only tilled client */
+              detach(c);
+       	      c->next = beforep->next;
+       	      beforep->next = c;
+	      focus(c);
+	      arrange(c->mon);
+        }
 }
 
 void
