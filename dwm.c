@@ -457,7 +457,7 @@ attachsup(const Arg *arg)
 Client **
 nexttiled2(Client **tc)
 {
-        for (; *tc && ((*tc)->isfloating || !ISVISIBLE(*tc)); tc = &(*tc)->next);
+        for (; *tc && ((*tc)->isfloating || !ISVISIBLE((*tc))); tc = &(*tc)->next);
         return tc;
 }
 
