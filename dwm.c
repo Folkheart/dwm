@@ -148,6 +148,7 @@ static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
 static void attachsup(const Arg *arg);
+static void attachsdown(const Arg *arg);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -420,12 +421,11 @@ attachsup(const Arg *arg)
         Client *c, *p, *beforep, *n;
         if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c))
               return;
-
-        /* find previous and before previous */
+        /* find previous and before previous tiled clients */
         p = beforep = nexttiled(c->mon->clients);
         for (; p && c != (n = nexttiled(p->next)); p = n)
               beforep = p;
-        if (p == beforep) { /* c is the second */
+        if (p == beforep) { /* c is the second tiled */
 	      pop(c);
 	} else if (beforep != c) { /* c is not the only tilled client */
               detach(c);
@@ -434,6 +434,24 @@ attachsup(const Arg *arg)
 	      focus(c);
 	      arrange(c->mon);
         }
+}
+
+void
+attachsdown(const Arg *arg)
+{
+        Client *c, *n;
+        if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c))
+              return;
+        /* find next tiled client */
+	n = nexttiled(c->next);
+	if (n) { /* c in not the last */
+	      detach(c);
+	      c->next = n->next;
+	      n->next = c;
+	      focus(c);
+	      arrange(c->mon);
+	} else /* c is the last */
+	      pop(c);
 }
 
 void
