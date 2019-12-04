@@ -422,18 +422,66 @@ attachsup(const Arg *arg)
         if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c))
               return;
         /* find previous and before previous tiled clients */
-        p = beforep = nexttiled(c->mon->clients);
-        for (; p && c != (n = nexttiled(p->next)); p = n)
-              beforep = p;
-        if (p == beforep) { /* c is the second tiled */
-	      pop(c);
-	} else if (beforep != c) { /* c is not the only tilled client */
-              detach(c);
-       	      c->next = beforep->next;
-       	      beforep->next = c;
-	      focus(c);
-	      arrange(c->mon);
+	p = NULL;
+        n = nexttiled(c->mon->clients);
+        for (; n && (n != c); n = nexttiled(n->next))
+              p = n;
+
+	detach(p);
+	if (p) { /* c in not the last */
+	      p->next = n->next;
+	      n->next = p;
+	} else /* c is the last */
+              attach(c);
+        focus(c);
+        arrange(c->mon);
         }
+        /* Client *c, *p, *beforep, *n; */
+        /* if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c)) */
+        /*       return; */
+        /* /\* find previous and before previous tiled clients *\/ */
+        /* p = beforep = nexttiled(c->mon->clients); */
+        /* for (; p && c != (n = nexttiled(p->next)); p = n) */
+        /*       beforep = p; */
+        /* if (p == beforep) { /\* c is the second tiled *\/ */
+	/*       pop(c); */
+	/* } else if (beforep != c) { /\* c is not the only tilled client *\/ */
+        /*       detach(c); */
+       	/*       c->next = beforep->next; */
+       	/*       beforep->next = c; */
+	/*       focus(c); */
+	/*       arrange(c->mon); */
+        /* } */
+
+    /* void */
+    /* detach(Client *c) */
+    /* { */
+    /* 	Client **tc; */
+    /* 	for (tc = &c->mon->clients; *tc && *tc != c; tc = &(*tc)->next); */
+    /* 	*tc = c->next; */
+    /* } */
+
+    /* Client ** */
+    /* nexttiled2(Client **tc) */
+    /* { */
+    /* 	        for (; *tc && (*tc->isfloating || !ISVISIBLE(*tc)); tc = &(*tc)->next); */
+    /* 	        return tc; */
+    /* } */
+
+/* void */
+/* pop(Client *c) */
+/* { */
+/* 	detach(c); */
+/* 	attach(c); */
+/* 	focus(c); */
+/* 	arrange(c->mon); */
+/* } */
+     /* Client * */
+     /* nexttiled(Client *c) */
+     /* { */
+     /* 	for (; c && (c->isfloating || !ISVISIBLE(c)); c = c->next); */
+     /* 	return c; */
+     /* } */
 }
 
 void
@@ -444,14 +492,27 @@ attachsdown(const Arg *arg)
               return;
         /* find next tiled client */
 	n = nexttiled(c->next);
+	detach(c);
 	if (n) { /* c in not the last */
-	      detach(c);
 	      c->next = n->next;
 	      n->next = c;
-	      focus(c);
-	      arrange(c->mon);
 	} else /* c is the last */
-	      pop(c);
+              attach(c);
+        focus(c);
+        arrange(c->mon);
+        /* Client *c, *n; */
+        /* if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c)) */
+        /*       return; */
+        /* /\* find next tiled client *\/ */
+	/* n = nexttiled(c->next); */
+	/* detach(c); */
+	/* if (n) { /\* c in not the last *\/ */
+	/*       c->next = n->next; */
+	/*       n->next = c; */
+	/* } else /\* c is the last *\/ */
+        /*       attach(c); */
+        /* focus(c); */
+        /* arrange(c->mon); */
 }
 
 void
