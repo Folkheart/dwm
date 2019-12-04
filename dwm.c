@@ -445,14 +445,7 @@ attachsup(const Arg *arg)
     /* 	for (tc = &c->mon->clients; *tc && *tc != c; tc = &(*tc)->next); */
     /* 	*tc = c->next; */
     /* } */
-/* void */
-/* pop(Client *c) */
-/* { */
-/* 	detach(c); */
-/* 	attach(c); */
-/* 	focus(c); */
-/* 	arrange(c->mon); */
-/* } */
+
      /* Client * */
      /* nexttiled(Client *c) */
      /* { */
