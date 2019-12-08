@@ -147,9 +147,9 @@ static int applysizehints(Client *c, int *x, int *y, int *w, int *h, int interac
 static void arrange(Monitor *m);
 static void arrangemon(Monitor *m);
 static void attach(Client *c);
-static void attachsup(const Arg *arg);
+static void swapup(const Arg *arg);
 static Client **nexttiled2(Client **tc);
-static void attachsdown(const Arg *arg);
+static void swapdown(const Arg *arg);
 static void attachstack(Client *c);
 static void buttonpress(XEvent *e);
 static void checkotherwm(void);
@@ -417,7 +417,7 @@ attachstack(Client *c)
 }
 
 void
-attachsup(const Arg *arg)
+swapup(const Arg *arg)
 {
         Client *c, **p, **n;
         if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c))
@@ -448,7 +448,7 @@ nexttiled2(Client **tc) /* nexttiled with pointer to pointer */
 }
 
 void
-attachsdown(const Arg *arg)
+swapdown(const Arg *arg)
 {
         Client *c, *n;
         if (!(c = selmon->sel) || c->isfloating || !ISVISIBLE(c))
