@@ -897,10 +897,10 @@ focusstack(const Arg *arg)
 	          nexttiled(selmon->sel->next) : nextfloating(selmon->sel->next); 
 		if (!c)
 	                c = !selmon->sel->isfloating ?
-	                  nextfloating(selmon->sel->next) : nexttiled(selmon->sel->next); 
+	                  nextfloating(selmon->clients) : nexttiled(selmon->clients); 
 		if (!c)
 	                c = !selmon->sel->isfloating ?
-	                  nexttiled(selmon->sel->next) : nextfloating(selmon->sel->next); 
+	                  nexttiled(selmon->clients) : nextfloating(selmon->clients); 
 	} else {
 	        c = !selmon->sel->isfloating ?
 	          prevtiled(selmon->sel) : prevfloating(selmon->sel); 
