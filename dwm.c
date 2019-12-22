@@ -173,6 +173,8 @@ static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
 static Client *nextfloating(Client *c);
+static Client *prevfloating(Client *c);
+static Client *prevtiled(Client *c);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
 static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
