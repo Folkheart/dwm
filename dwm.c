@@ -172,6 +172,7 @@ static void focus(Client *c);
 static void focusin(XEvent *e);
 static void focusmon(const Arg *arg);
 static void focusstack(const Arg *arg);
+static Client *nextfloating(Client *c);
 static int getrootptr(int *x, int *y);
 static long getstate(Window w);
 static int gettextprop(Window w, Atom atom, char *text, unsigned int size);
@@ -888,23 +889,59 @@ focusstack(const Arg *arg)
 
 	if (!selmon->sel)
 		return;
-	if (arg->i > 0) {
-		for (c = selmon->sel->next; c && !ISVISIBLE(c); c = c->next);
-		if (!c)
-			for (c = selmon->clients; c && !ISVISIBLE(c); c = c->next);
+
+	if (!selmon->sel->isfloating) {
+	        if (arg->i > 0) {
+	                c = nexttiled(selmon->sel->next);
+	        	if (!c)
+	        	        c = nextfloating(selmon->clients);
+	        	if (!c)
+	        	        c = nexttiled(selmon->clients);
+	        } else {
+	        	for (i = selmon->clients; i != selmon->sel; i = i->next)
+	        		if (!i->isfloating && ISVISIBLE(i))
+	        			c = i;
+	        	if (!c)
+	        		for (i = selmon->clients; i; i = i->next)
+	        			if (i->isfloating && ISVISIBLE(i))
+	        				c = i;
+	        	if (!c)
+	        		for (i = selmon->clients; i; i = i->next)
+	        			if (!i->isfloating && ISVISIBLE(i))
+	        				c = i;
+	        }
 	} else {
-		for (i = selmon->clients; i != selmon->sel; i = i->next)
-			if (ISVISIBLE(i))
-				c = i;
-		if (!c)
-			for (; i; i = i->next)
-				if (ISVISIBLE(i))
-					c = i;
+	        if (arg->i > 0) {
+	                c = nextfloating(selmon->sel->next);
+	        	if (!c)
+	        	        c = nexttiled(selmon->clients);
+	        	if (!c)
+	        	        c = nextfloating(selmon->clients);
+	        } else {
+	        	for (i = selmon->clients; i != selmon->sel; i = i->next)
+	        		if (i->isfloating && ISVISIBLE(i))
+	        			c = i;
+	        	if (!c)
+	        		for (i = selmon->clients; i; i = i->next)
+	        			if (!i->isfloating && ISVISIBLE(i))
+	        				c = i;
+	        	if (!c)
+	        		for (i = selmon->clients; i; i = i->next)
+	        			if (i->isfloating && ISVISIBLE(i))
+	        				c = i;
+	        }
 	}
 	if (c) {
 		focus(c);
 		restack(selmon);
 	}
+}
+
+Client *
+nextfloating(Client *c)
+{
+	for (; c && (!c->isfloating || !ISVISIBLE(c)); c = c->next);
+	return c;
 }
 
 Atom
