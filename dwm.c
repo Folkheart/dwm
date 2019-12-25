@@ -52,8 +52,8 @@
 #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
-#define WIDTH(X)                ((X)->w + 2 * (X)->bw + gappx)
-#define HEIGHT(X)               ((X)->h + 2 * (X)->bw + gappx)
+#define WIDTH(X)                ((X)->w + 2 * (X)->bw)
+#define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 
@@ -1283,7 +1283,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 
 	wc.border_width = c->bw;
 
-	/* Get number of clients for the selected monitor */
+	/* Get number of tiled clients for the selected monitor */
 	for (n = 0, nbc = nexttiled(selmon->clients); nbc; nbc = nexttiled(nbc->next), n++);
 
 	/* Do nothing if layout is floating */
@@ -1295,14 +1295,22 @@ resizeclient(Client *c, int x, int y, int w, int h)
 			gapoffset = 0;
 			gapincr = -2 * borderpx;
 			wc.border_width = 0;
-		} else {
+		} else if (n == 2) {
+
+		  if 
+		        } else {
 			gapoffset = gappx;
 			gapincr = 2 * gappx;
 		}
 	}
 
-	c->oldx = c->x; c->x = wc.x = x + gapoffset;
-	c->oldy = c->y; c->y = wc.y = y + gapoffset;
+
+
+
+
+
+	c->oldx = c->x; c->x = wc.x = x + gapoffsetx;
+	c->oldy = c->y; c->y = wc.y = y + gapoffsety;
 	c->oldw = c->w; c->w = wc.width = w - gapincr;
 	c->oldh = c->h; c->h = wc.height = h - gapincr;
 
