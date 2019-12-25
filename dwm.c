@@ -1296,13 +1296,14 @@ resizeclient(Client *c, int x, int y, int w, int h)
 		} else {
 			if (selmon->ww == w + 2*c->bw)
 			        gapincw = 2*gappx;
-			else if (x == selmon->wx || x == selmon->ww - w - 2*c->bw)
+			else if (x == selmon->wx || x == selmon->ww - (w + 2*c->bw))
 			        gapincw = (gappx*3)/2;
 			else
 			        gapincw = gappx/2;
+
 			if (selmon->wh == h + 2*c->bw)
 			        gapinch = 2*gappx;
-			else if (y == selmon->wy || y == selmon->wh - h - 2*c->bw)
+			else if (y == selmon->wy || y == selmon->wh - (h + 2*c->bw))
 			        gapinch = (gappx*3)/2;
 			else
 			        gapinch = gappx/2;
@@ -1311,6 +1312,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 		                offsetx = gappx;
 		        else
 		                offsetx = gappx/2;
+
 		        if (y == selmon->wy)
 		                offsety = gappx;
 		        else
@@ -1729,11 +1731,11 @@ tile(Monitor *m)
 		if (i < m->nmaster) {
 			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
 			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-			my += HEIGHT(c);
+			my += (HEIGHT(c) + 2*gappx);
 		} else {
 			h = (m->wh - ty) / (n - i);
 			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
-			ty += HEIGHT(c);
+			ty += (HEIGHT(c) + 2*gappx);
 		}
 }
 
