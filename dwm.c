@@ -1276,9 +1276,7 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
-	unsigned int n;
-	unsigned int gapoffset;
-	unsigned int gapincr;
+	unsigned int n, offsetx, offsety, gapincw, gapinch;
 	Client *nbc;
 
 	wc.border_width = c->bw;
@@ -1287,32 +1285,43 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	for (n = 0, nbc = nexttiled(selmon->clients); nbc; nbc = nexttiled(nbc->next), n++);
 
 	/* Do nothing if layout is floating */
-	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) {
-		gapincr = gapoffset = 0;
-	} else {
+	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL)
+		offsetx = offsety = gapincw = gapinch = 0;
+	else {
 		/* Remove border and gap if layout is monocle or only one client */
 		if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1) {
-			gapoffset = 0;
-			gapincr = -2 * borderpx;
+			offsetx = offsety = 0;
+			gapincw = gapinch = -2*c->bw;
 			wc.border_width = 0;
-		} else if (n == 2) {
+		} else {
+			if (selmon->ww == w + 2*c->bw)
+			        gapincw = 2*gappx;
+			else if (x == selmon->wx || x == selmon->ww - w - 2*c->bw)
+			        gapincw = (gappx*3)/2;
+			else
+			        gapincw = gappx/2;
+			if (selmon->wh == h + 2*c->bw)
+			        gapinch = 2*gappx;
+			else if (y == selmon->wy || y == selmon->wh - h - 2*c->bw)
+			        gapinch = (gappx*3)/2;
+			else
+			        gapinch = gappx/2;
 
-		  if 
-		        } else {
-			gapoffset = gappx;
-			gapincr = 2 * gappx;
+		        if (x == selmon->wx)
+		                offsetx = gappx;
+		        else
+		                offsetx = gappx/2;
+		        if (y == selmon->wy)
+		                offsety = gappx;
+		        else
+		                offsety = gappx/2;
 		}
 	}
 
-
-
-
-
-
-	c->oldx = c->x; c->x = wc.x = x + gapoffsetx;
-	c->oldy = c->y; c->y = wc.y = y + gapoffsety;
-	c->oldw = c->w; c->w = wc.width = w - gapincr;
-	c->oldh = c->h; c->h = wc.height = h - gapincr;
+	c->oldx = c->x; c->x = wc.x = x + offsetx;
+	c->oldy = c->y; c->y = wc.y = y + offsety;
+	c->oldw = c->w; c->w = wc.width = w - gapincw;
+	c->oldh = c->h; c->h = wc.height = h - gapinch;
 
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
