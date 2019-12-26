@@ -1276,7 +1276,7 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
-	unsigned int n, offsetx, offsety, gapincw, gapinch;
+	unsigned int n, offset, gapinc;
 	Client *nbc;
 
 	wc.border_width = c->bw;
@@ -1286,23 +1286,23 @@ resizeclient(Client *c, int x, int y, int w, int h)
 
 	/* Do nothing if layout is floating */
 	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL)
-		offsetx = offsety = gapincw = gapinch = 0;
+		offset = gapinc = 0;
 	else {
 		/* Remove border and gap if layout is monocle or only one client */
 		if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1) {
-			offsetx = offsety = 0;
-			gapincw = gapinch = -2*c->bw;
+			offset = 0;
+			gapinc = -2*c->bw;
 			wc.border_width = 0;
 		} else {
-		        offsetx = offsety = gappx/2;
-			gapincw = gapinch = 2*offsetx;
+		        offset = gappx/2;
+			gapinc = 2*offset;
 		}
 	}
 
-	c->oldx = c->x; c->x = wc.x = x + offsetx;
-	c->oldy = c->y; c->y = wc.y = y + offsety;
-	c->oldw = c->w; c->w = wc.width = w - gapincw;
-	c->oldh = c->h; c->h = wc.height = h - gapinch;
+	c->oldx = c->x; c->x = wc.x = x + offset;
+	c->oldy = c->y; c->y = wc.y = y + offset;
+	c->oldw = c->w; c->w = wc.width = w - gapinc;
+	c->oldh = c->h; c->h = wc.height = h - gapinc;
 
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
@@ -1695,7 +1695,10 @@ tagmon(const Arg *arg)
 void
 tile(Monitor *m)
 {
-        unsigned int i, n, h, mw, my, ty, gap = gappx/2;
+        unsigned int i, n, h, mw, my, ty;
+	unsigned int gap = gappx/2;
+	unsigned int gwx = m->wx + gap, gwy = m->wy + gap;
+	unsigned int gww = m->ww - 2*gap, gwh = m->wh - 2*gap;
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
@@ -1703,17 +1706,17 @@ tile(Monitor *m)
 		return;
 
 	if (n > m->nmaster)
-	        mw = m->nmaster ? (m->ww - 2*gap) * m->mfact : 0;
+	        mw = m->nmaster ? gww * m->mfact : 0;
 	else
-		mw = m->ww - 2*gap;
+		mw = gww;
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh - my - 2*gap) / (MIN(n, m->nmaster) - i);
-			resize(c, m->wx + gap, m->wy + gap + my, mw - (2*c->bw), h - (2*c->bw), 0);
+			h = (gwh - my) / (MIN(n, m->nmaster) - i);
+			resize(c, gwx, gwy + my, mw - (2*c->bw), h - (2*c->bw), 0);
 			my += HEIGHT(c) + 2*gap;
 		} else {
-			h = (m->wh - ty - 2*gap) / (n - i);
-			resize(c, m->wx + gap + mw, m->wy + gap + ty, m->ww - 2*gap - mw - (2*c->bw), h - (2*c->bw), 0);
+			h = (gwh - ty) / (n - i);
+			resize(c, gwx + mw, gwy + ty, gww - mw - (2*c->bw), h - (2*c->bw), 0);
 			ty += HEIGHT(c) + 2*gap;
 		}
 }
