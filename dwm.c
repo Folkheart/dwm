@@ -1276,7 +1276,7 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
-	unsigned int n, offset, gapinc;
+	unsigned int n;
 	Client *nbc;
 
 	wc.border_width = c->bw;
@@ -1284,25 +1284,14 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	/* Get number of tiled clients for the selected monitor */
 	for (n = 0, nbc = nexttiled(selmon->clients); nbc; nbc = nexttiled(nbc->next), n++);
 
-	/* Do nothing if layout is floating */
-	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL)
-		offset = gapinc = 0;
-	else {
-		/* Remove border and gap if layout is monocle or only one client */
-		if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1) {
-			offset = 0;
-			gapinc = -2*c->bw;
-			wc.border_width = 0;
-		} else {
-		        offset = gappx/2;
-			gapinc = 2*offset;
-		}
-	}
+	/* Remove border and gap if layout is monocle or only one client */
+	if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1)
+		wc.border_width = 0;
 
-	c->oldx = c->x; c->x = wc.x = x + offset;
-	c->oldy = c->y; c->y = wc.y = y + offset;
-	c->oldw = c->w; c->w = wc.width = w - gapinc;
-	c->oldh = c->h; c->h = wc.height = h - gapinc;
+	c->oldx = c->x; c->x = wc.x = x;
+	c->oldy = c->y; c->y = wc.y = y;
+	c->oldw = c->w; c->w = wc.width = w;
+	c->oldh = c->h; c->h = wc.height = h;
 
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
@@ -1696,9 +1685,8 @@ void
 tile(Monitor *m)
 {
         unsigned int i, n, h, mw, my, ty;
-	unsigned int gap = gappx/2;
-	unsigned int gwx = m->wx + gap, gwy = m->wy + gap;
-	unsigned int gww = m->ww - 2*gap, gwh = m->wh - 2*gap;
+	unsigned int gwx = m->wx + gappx, gwy = m->wy + gappx;
+	unsigned int gww = m->ww - 2*gappx, gwh = m->wh - 2*gappx;
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
@@ -1712,12 +1700,12 @@ tile(Monitor *m)
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
 			h = (gwh - my) / (MIN(n, m->nmaster) - i);
-			resize(c, gwx, gwy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-			my += HEIGHT(c) + 2*gap;
+			resize(c, gwx, gwy + my, mw - (2*c->bw) - gappx, h - (2*c->bw) - gappx, 0);
+			my += HEIGHT(c) + gappx;
 		} else {
 			h = (gwh - ty) / (n - i);
-			resize(c, gwx + mw, gwy + ty, gww - mw - (2*c->bw), h - (2*c->bw), 0);
-			ty += HEIGHT(c) + 2*gap;
+			resize(c, gwx + mw, gwy + ty, gww - mw - (2*c->bw) - gappx, h - (2*c->bw) - gappx, 0);
+			ty += HEIGHT(c) + gappx;
 		}
 }
 
