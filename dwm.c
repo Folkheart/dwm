@@ -1685,13 +1685,18 @@ void
 tile(Monitor *m)
 {
         unsigned int i, n, h, mw, my, ty;
-	unsigned int gwx = m->wx + gappx, gwy = m->wy + gappx;
-	unsigned int gww = m->ww - gappx, gwh = m->wh - gappx;
+	unsigned int gwx, gwy, gww, gwh;
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
 	if (n == 0)
 		return;
+
+	gap = (n == 1) ? 0 : gappx;
+	gwx = m->wx + gap;
+	gwy = m->wy + gap;
+	gww = m->ww - gap;
+	gwh = m->wh - gap;
 
 	if (n > m->nmaster)
 	        mw = m->nmaster ? gww * m->mfact : 0;
