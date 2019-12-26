@@ -52,8 +52,8 @@
 #define ISVISIBLE(C)            ((C->tags & C->mon->tagset[C->mon->seltags]))
 #define LENGTH(X)               (sizeof X / sizeof X[0])
 #define MOUSEMASK               (BUTTONMASK|PointerMotionMask)
-#define WIDTH(X)                ((X)->w + 2 * (X)->bw + gappx)
-#define HEIGHT(X)               ((X)->h + 2 * (X)->bw + gappx)
+#define WIDTH(X)                ((X)->w + 2 * (X)->bw)
+#define HEIGHT(X)               ((X)->h + 2 * (X)->bw)
 #define TAGMASK                 ((1 << LENGTH(tags)) - 1)
 #define TEXTW(X)                (drw_fontset_getwidth(drw, (X)) + lrpad)
 
@@ -1294,29 +1294,8 @@ resizeclient(Client *c, int x, int y, int w, int h)
 			gapincw = gapinch = -2*c->bw;
 			wc.border_width = 0;
 		} else {
-			if (selmon->ww == w + 2*c->bw)
-			        gapincw = 2*gappx;
-			else if (x == selmon->wx || x == selmon->ww - (w + 2*c->bw))
-			        gapincw = (gappx*3)/2;
-			else
-			        gapincw = gappx/2;
-
-			if (selmon->wh == h + 2*c->bw)
-			        gapinch = 2*gappx;
-			else if (y == selmon->wy || y == selmon->wh - (h + 2*c->bw))
-			        gapinch = (gappx*3)/2;
-			else
-			        gapinch = gappx/2;
-
-		        if (x == selmon->wx)
-		                offsetx = gappx;
-		        else
-		                offsetx = gappx/2;
-
-		        if (y == selmon->wy)
-		                offsety = gappx;
-		        else
-		                offsety = gappx/2;
+		        offsetx = offsety = gappx/2;
+			gapincw = gapinch = 2*offsetx;
 		}
 	}
 
@@ -1716,7 +1695,7 @@ tagmon(const Arg *arg)
 void
 tile(Monitor *m)
 {
-	unsigned int i, n, h, mw, my, ty;
+        unsigned int i, n, h, mw, my, ty, gap = gappx/2;
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
@@ -1724,18 +1703,18 @@ tile(Monitor *m)
 		return;
 
 	if (n > m->nmaster)
-		mw = m->nmaster ? m->ww * m->mfact : 0;
+	        mw = m->nmaster ? (m->ww - 2*gap) * m->mfact : 0;
 	else
-		mw = m->ww;
+		mw = m->ww - 2*gap;
 	for (i = my = ty = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), i++)
 		if (i < m->nmaster) {
-			h = (m->wh - my) / (MIN(n, m->nmaster) - i);
-			resize(c, m->wx, m->wy + my, mw - (2*c->bw), h - (2*c->bw), 0);
-			my += HEIGHT(c);
+			h = (m->wh - my - 2*gap) / (MIN(n, m->nmaster) - i);
+			resize(c, m->wx + gap, m->wy + gap + my, mw - (2*c->bw), h - (2*c->bw), 0);
+			my += HEIGHT(c) + 2*gap;
 		} else {
-			h = (m->wh - ty) / (n - i);
-			resize(c, m->wx + mw, m->wy + ty, m->ww - mw - (2*c->bw), h - (2*c->bw), 0);
-			ty += HEIGHT(c);
+			h = (m->wh - ty - 2*gap) / (n - i);
+			resize(c, m->wx + gap + mw, m->wy + gap + ty, m->ww - 2*gap - mw - (2*c->bw), h - (2*c->bw), 0);
+			ty += HEIGHT(c) + 2*gap;
 		}
 }
 
