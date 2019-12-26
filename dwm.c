@@ -1685,7 +1685,7 @@ void
 tile(Monitor *m)
 {
         unsigned int i, n, h, mw, my, ty;
-	unsigned int gwx, gwy, gww, gwh;
+	unsigned int gap, gwx, gwy, gww, gwh;
 	Client *c;
 
 	for (n = 0, c = nexttiled(m->clients); c; c = nexttiled(c->next), n++);
