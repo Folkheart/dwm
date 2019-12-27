@@ -1283,7 +1283,7 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	c->oldy = c->y; c->y = wc.y = y;
 	c->oldw = c->w; 
 	c->oldh = c->h; 
-	/* Do nothing if layout is floating */
+	/* Do nothing if floating or layout is floating */
 	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) {
                 c->w = wc.width = w;  
 	        c->h = wc.height = h;
