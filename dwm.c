@@ -1276,24 +1276,25 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
-	unsigned int n, inc = 0;
-	Client *nbc;
-
-	wc.border_width = c->bw;
-
-	/* Get number of tiled clients for the selected monitor */
-	for (n = 0, nbc = nexttiled(selmon->clients); nbc; nbc = nexttiled(nbc->next), n++);
-
-	/* Remove border and gap if layout is monocle or only one client */
-	if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1) {
-	        inc = 2*c->bw;
-		wc.border_width = 0;
-	}
+	unsigned int n;
+	Client *nc;
 
 	c->oldx = c->x; c->x = wc.x = x;
 	c->oldy = c->y; c->y = wc.y = y;
-	c->oldw = c->w; c->w = wc.width = w + inc;
-	c->oldh = c->h; c->h = wc.height = h + inc;
+	c->oldw = c->w; 
+	c->oldh = c->h; 
+	/* Get number of tiled clients */
+	for (n = 0, nc = nexttiled(selmon->clients); nc; nc = nexttiled(nc->next), n++);
+	/* Remove border if layout is monocle or only one client */
+	if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1) {
+                c->w = wc.width = w + 2*c->bw;  
+	        c->h = wc.height = h + 2*c->bw;
+		wc.border_width = 0;
+	} else {
+                c->w = wc.width = w;  
+	        c->h = wc.height = h;
+	        wc.border_width = c->bw;
+	}
 
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
