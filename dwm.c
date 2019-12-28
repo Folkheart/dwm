@@ -1278,18 +1278,14 @@ resizeclient(Client *c, int x, int y, int w, int h)
 	XWindowChanges wc;
 	int offset = 0, borders = 0;
 
-	/* Do nothing if floating or layout is floating */
-	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL);
-		/* offset = borders = 0; */
-	else {/* Remove border if layout is monocle or only one client */
+	/* do nothing if floating client or floating layout */
+	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) {
+	} else {/* hide border if monocle layout or only one client */
 	        if (selmon->lt[selmon->sellt]->arrange == monocle ||
 	            (nexttiled(c->mon->clients) == c && !nexttiled(c->next))) {
                         offset = -(c->bw);
 		        borders = 2*c->bw;
 		}
-	        /* } else { */
-		/*         offset = borders = 0; */
-	        /* } */
 	}
 	
  	wc.border_width = c->bw;
