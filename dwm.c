@@ -1276,33 +1276,28 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
-	unsigned int n;
-	Client *nc;
+	int offset = 0, borders = 0;
 
-	c->oldx = c->x; c->x = wc.x = x;
-	c->oldy = c->y; c->y = wc.y = y;
-	c->oldw = c->w; 
-	c->oldh = c->h; 
 	/* Do nothing if floating or layout is floating */
-	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) {
-                c->w = wc.width = w;  
-	        c->h = wc.height = h;
-	        wc.border_width = c->bw;
-	} else {
-	        /* Get number of tiled clients */
-	        for (n = 0, nc = nexttiled(selmon->clients); nc; nc = nexttiled(nc->next), n++);
-	        /* Remove border if layout is monocle or only one client */
-	        if (selmon->lt[selmon->sellt]->arrange == monocle || n == 1) {
-                        c->w = wc.width = w + 2*c->bw;  
-	                c->h = wc.height = h + 2*c->bw;
-	        	wc.border_width = 0;
-	        } else {
-                        c->w = wc.width = w;  
-	                c->h = wc.height = h;
-	                wc.border_width = c->bw;
-	        }
+	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL);
+		/* offset = borders = 0; */
+	else {/* Remove border if layout is monocle or only one client */
+	        if (selmon->lt[selmon->sellt]->arrange == monocle ||
+	            (nexttiled(c->mon->clients) == c && !nexttiled(c->next))) {
+                        offset = -(c->bw);
+		        borders = 2*c->bw;
+		}
+	        /* } else { */
+		/*         offset = borders = 0; */
+	        /* } */
 	}
 	
+ 	wc.border_width = c->bw;
+	c->oldx = c->x; c->x = wc.x = x + offset;
+	c->oldy = c->y; c->y = wc.y = y + offset;
+	c->oldw = c->w; c->w = wc.width = w + borders;
+	c->oldh = c->h; c->h = wc.height = h + borders;
+
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
 	XSync(dpy, False);
