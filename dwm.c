@@ -1288,12 +1288,11 @@ resizeclient(Client *c, int x, int y, int w, int h)
 		}
 	}
 	
- 	wc.border_width = c->bw;
 	c->oldx = c->x; c->x = wc.x = x + offset;
 	c->oldy = c->y; c->y = wc.y = y + offset;
 	c->oldw = c->w; c->w = wc.width = w + borders;
 	c->oldh = c->h; c->h = wc.height = h + borders;
-
+ 	wc.border_width = c->bw;
 	XConfigureWindow(dpy, c->win, CWX|CWY|CWWidth|CWHeight|CWBorderWidth, &wc);
 	configure(c);
 	XSync(dpy, False);
