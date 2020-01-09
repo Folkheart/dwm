@@ -855,10 +855,13 @@ focusstack(const Arg *arg)
 					c = i;
 	}
 	if (c) {
-		/* arrange(selmon); */
-
 		focus(c);
 		restack(selmon);
+		
+		if (selmon->sel)
+			arrange(selmon);
+		else
+			drawbar(selmon);
 	}
 }
 
