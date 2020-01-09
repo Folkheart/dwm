@@ -91,6 +91,7 @@ struct Client {
 	int oldx, oldy, oldw, oldh;
 	int basew, baseh, incw, inch, maxw, maxh, minw, minh;
 	int bw, oldbw;
+	int gap;
 	unsigned int tags;
 	int isfixed, isfloating, isurgent, neverfocus, oldstate, isfullscreen;
 	Client *next;
@@ -796,6 +797,10 @@ focus(Client *c)
 		attachstack(c);
 		grabbuttons(c, 1);
 		XSetWindowBorder(dpy, c->win, scheme[SchemeSel][ColBorder].pixel);
+
+		c->bw += focusborderpx;
+		c->gap -= focusborderpx;
+		
 		setfocus(c);
 	} else {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
@@ -852,6 +857,8 @@ focusstack(const Arg *arg)
 	if (c) {
 		focus(c);
 		restack(selmon);
+
+		arrange(selmon);
 	}
 }
 
@@ -1276,10 +1283,12 @@ void
 resizeclient(Client *c, int x, int y, int w, int h)
 {
 	XWindowChanges wc;
-	int offset = 0, borders = 0;
+	int offset = c->gap, borders = -2*(c->gap);
 
 	/* do nothing if floating client or floating layout */
 	if (c->isfloating || selmon->lt[selmon->sellt]->arrange == NULL) {
+		offset = 0;
+		borders = 0;
 	} else {/* hide border if monocle layout or only one client */
 	        if (selmon->lt[selmon->sellt]->arrange == monocle ||
 	            (nexttiled(c->mon->clients) == c && !nexttiled(c->next))) {
@@ -1771,6 +1780,10 @@ unfocus(Client *c, int setfocus)
 		return;
 	grabbuttons(c, 0);
 	XSetWindowBorder(dpy, c->win, scheme[SchemeNorm][ColBorder].pixel);
+
+	c->bw = borderpx;
+	c->gap = gappx;
+	
 	if (setfocus) {
 		XSetInputFocus(dpy, root, RevertToPointerRoot, CurrentTime);
 		XDeleteProperty(dpy, root, netatom[NetActiveWindow]);
