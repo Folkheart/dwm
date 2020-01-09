@@ -855,7 +855,7 @@ focusstack(const Arg *arg)
 					c = i;
 	}
 	if (c) {
-		arrange(selmon);
+		/* arrange(selmon); */
 
 		focus(c);
 		restack(selmon);
