@@ -18,7 +18,7 @@ static const char *colors[][3]      = {
 	[SchemeSel]  = { col_gray4, col_cyan,  col_cyan  },
 };
 
-static const unsigned int gappx       = 8;      /* gaps between windows */
+static const unsigned int gappx         = 8;      /* gaps between windows */
 static const unsigned int focusborderpx = 2;
 
 /* tagging */
