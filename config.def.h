@@ -19,7 +19,7 @@ static const char *colors[][3]      = {
 };
 
 static const unsigned int gappx       = 8;      /* gaps between windows */
-static const unsigned int focusborder = 2;
+static const unsigned int focusborderpx = 2;
 
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
